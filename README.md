@@ -1,3 +1,20 @@
+## Why this fork exists
+
+This fork was made to add a few new features/options, including...
+
+### 1. New callbacks
+
+- `onAddChar`: Triggered after a character has been appended.
+- `onDeleteChar`: Triggered after a character has been deleted.
+- `onLastChar`: Triggered after the final character of all enqueued strings has been appended.
+
+### 2. Word wrap prevention
+#### (Requires monospace font, `white-space: pre-line` CSS, and a fixed-width HTML element)
+- `preventWordWrap`: (boolean) Enables word wrap prevention for more aesthetic typewriter effect
+- `wordWrapLineLengthLimit`: (num) The maximum number of characters able to print on one line
+
+# Original Repo's Readme
+
 # T-Writer.js
 
 [![t-writer.js on NPM](https://img.shields.io/npm/v/t-writer.js.svg?style=flat-square)](https://www.npmjs.com/package/t-writer.js) 
@@ -74,7 +91,7 @@ The order of actions is preserved.  Simply call `start()` again to repeat the ef
 Queue Methods:
 * [type](#type-str)
 * [remove](#remove-num)
-* [rest](#rest-interval)
+* [pause](#pause-time)
 * [strings](#strings-interval-string1--string2-)
 * [clear](#clear)
 * [then](#then-callback)
@@ -89,8 +106,10 @@ Queue Methods:
 
 Other:
 * [start](#start)
+* [stop](#stop)
 * [clearText](#cleartext)
 * [clearQueue](#clearqueue)
+* [destroy](#destroy)
 
 ### type (str)
 
@@ -104,9 +123,9 @@ Types the `string` given as an argument.
 
 Removes the number of characters given as an argument.
 
-### rest (interval)
+### pause (time)
 
-* interval -> `integer`
+* time -> `integer`
   * amount of time, in milliseconds
 
 Pauses the writer for the specified period of time.
@@ -184,6 +203,10 @@ Changes the `class` attribute on the `<span>` element that wraps around the curs
 
 Starts the effect.  The writer will go through it's queue of actions.
 
+### stop
+
+Stops the writer effect and cancels any running animations. The writer will stop at its current state.
+
 ### clearText
 
 Clears all text from the writer **instantly**.  This is not a queued action, therefore, it can only be called once the writer has stopped running.
@@ -194,6 +217,10 @@ Since this is not a queued action, `clearText` will never run if the [loop](#loo
 
 Clears the writer's queue, as well as all text in the writer.  This is not a queued action, therefore, it will never run if the [loop](#loop) option is set to `true`.
 
+### destroy
+
+Stops the writer effect, removes the cursor, and removes all DOM elements created by the writer. This method should be called when you're done with the writer instance to clean up resources.
+
 ## Options
 
 It is not required to pass in options, as each option comes with a default:
@@ -202,23 +229,22 @@ It is not required to pass in options, as each option comes with a default:
 const defaultOptions = {
   loop: false,
   animateCursor: true,
-
+  preventWordWrap: false,
   blinkSpeed: 400,
-
   typeSpeed: 90,
   deleteSpeed: 40,
-
   typeSpeedMin: 65,
   typeSpeedMax: 115,
-
   deleteSpeedMin: 40,
   deleteSpeedMax: 90,
-
   typeClass: 'type-span',
   cursorClass: 'cursor-span',
-
   typeColor: 'black',
-  cursorColor: 'black'
+  cursorColor: 'black',
+  wordWrapLineLengthLimit: 0,
+  onAddChar: () => {},
+  onDeleteChar: () => {},
+  onLastChar: () => {}
 }
 ```
 
@@ -227,6 +253,7 @@ Explanation of each option follows:
 general
 * [loop](#loop)
 * [animateCursor](#animatecursor)
+* [preventWordWrap](#preventwordwrap)
 speeds
 * [blinkSpeed](#blinkspeed)
 * [typeSpeed](#typespeed)
@@ -241,6 +268,12 @@ classes
 colors
 * [typeColor](#typecolor)
 * [cursorColor](#cursorcolor)
+callbacks
+* [onAddChar](#onaddchar)
+* [onDeleteChar](#ondeletechar)
+* [onLastChar](#onlastchar)
+other
+* [wordWrapLineLengthLimit](#wordwraplinelengthlimit)
 
 ### loop
 
@@ -332,23 +365,60 @@ Accepts a `string` of any CSS color (rbg, 'white', etc).
 
 Applies an inline-style to the `<span>` element that wraps around the cursor portion of the writer.
 
+### preventWordWrap
+
+Accepts a `boolean`.
+
+* `true` -> enables word wrap prevention for more aesthetic typewriter effect
+* `false` -> default word wrapping behavior
+
+**Note**: Requires monospace font, `white-space: pre-line` CSS, and a fixed-width HTML element.
+
+### wordWrapLineLengthLimit
+
+Accepts a `number`.
+
+The maximum number of characters able to print on one line. Only applicable when `preventWordWrap` is enabled.
+
+**Note**: Requires monospace font, `white-space: pre-line` CSS, and a fixed-width HTML element.
+
+### onAddChar
+
+Accepts a `function`.
+
+Callback function that is triggered after a character has been appended.
+
+### onDeleteChar
+
+Accepts a `function`.
+
+Callback function that is triggered after a character has been deleted.
+
+### onLastChar
+
+Accepts a `function`.
+
+Callback function that is triggered after the final character of all enqueued strings has been appended.
+
 ## Browser Support
 
 T-Writer depends on the following browser APIs:
 
 * [requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
 * [promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
+* [Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
 
 Consequently, it supports the following natively:
 
-* Chrome 32+
-* Firefox 29+
-* Safari 8+
-* Opera 19+
-* IE 9+ [with polyfill](https://github.com/stefanpenner/es6-promise)
-* iOS Safari 8+
-* Android Browser 4.4.4+
+* Chrome 87+
+* Firefox 125+
+* Safari 17.0+
+* Edge 87+
+* iOS Safari 17.0+
+
+**Note**: For older browsers that don't support Intl.Segmenter, a polyfill is required.
 
 ## License
 
 [MIT](https://opensource.org/licenses/MIT). © 2018 Christopher Cavalea
+[MIT](https://opensource.org/licenses/MIT). © 2025 Silicon Valley Anime Club LLC

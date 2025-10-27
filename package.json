@@ -1,7 +1,7 @@
 {
-  "name": "t-writer.js",
-  "version": "1.0.4",
-  "description": "Native typewriter effect, without compromises or dependencies.",
+  "name": "@svac/t-writer.js",
+  "version": "1.0.0",
+  "description": "Native typewriter effect, without compromises or dependencies. Forked from t-writer.js",
   "main": "dist/t-writer.js",
   "license": "MIT",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ChrisCavs/t-writer.js.git"
+    "url": "git+https://github.com/siliconvalleyanimeclub/t-writer.js.git"
   },
   "keywords": [
     "typewriter",
@@ -21,9 +21,8 @@
     "writer"
   ],
   "author": {
-    "name": "Christopher Cavalea",
-    "email": "chriscavs94@gmail.com",
-    "url": "http://chriscavs.github.io/"
+    "name": "SVAC",
+    "email": "engineering@svac.com"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
